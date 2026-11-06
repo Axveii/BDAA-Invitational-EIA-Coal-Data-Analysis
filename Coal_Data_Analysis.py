@@ -68,60 +68,6 @@ plt.tight_layout()
 plt.show()
 
 # %%
-sector_change = us[us["sector"].isin(valid_sectors)].pivot(
-    index = "sectorDescription",
-    columns = "period",
-    values = "consumption"
-)
-
-sector_change["Percent Change"] = (
-    (sector_change[2025] - sector_change[2020])
-    / sector_change[2020]
-) * 100
-
-sector_change = sector_change.sort_values("Percent Change")
-
-plt.figure(figsize=(10, 6))
-
-sns.barplot(
-    x=sector_change["Percent Change"],
-    y=sector_change.index
-)
-
-plt.axvline(0, color="black")
-
-plt.title("Percentage Change in Coal Consumption by Sector (2020–2025)")
-plt.xlabel("Percentage Change")
-plt.ylabel("Sector")
-plt.tight_layout()
-plt.show()
-
-# %%
-for year in [2020, 2025]:
-
-    state_year = states[
-        (states["period"] == year) &
-        (states["sector"].isin(valid_sectors))
-    ]
-
-    state_year = (
-        state_year.groupby("stateDescription")["consumption"]
-        .sum()
-        .sort_values(ascending=False)
-    ) / 1000000
-
-    plt.figure(figsize=(10, 7))
-
-    state_year.head(15).sort_values().plot(kind="barh")
-
-    plt.title(f"Top 15 Coal-Consuming States ({year})")
-    plt.xlabel("Consumption (Million Short Tons)")
-    plt.ylabel("State")
-
-    plt.tight_layout()
-    plt.show()
-
-# %%
 state_comparison = states[states["sector"].isin(valid_sectors)].pivot_table(
     index = "stateDescription",
     columns = "period",
@@ -145,9 +91,6 @@ plt.title("Change in Coal Consumption by State (2020–2025)")
 plt.xlabel("Change (Million Short Tons)")
 plt.ylabel("State")
 plt.show()
-
-# %% [markdown]
-# #Prices, deliveries, and stockpiles
 
 # %%
 plt.figure(figsize = (11, 7))
@@ -256,76 +199,6 @@ plt.tight_layout()
 plt.show()
 
 # %%
-quality_data = us[
-    us["sector"].isin(valid_sectors) &
-    us["period"].isin([2020, 2025])
-].copy()
-
-quality_change = quality_data.pivot(
-    index = "sector",
-    columns = "period",
-    values = ["ash-content", "sulfur-content", "price"]
-)
-
-quality_change["ash-change"] = (
-    quality_change["ash-content"][2025] -
-    quality_change["ash-content"][2020]
-)
-
-quality_change["sulfur-change"] = (
-    quality_change["sulfur-content"][2025] -
-    quality_change["sulfur-content"][2020]
-)
-
-quality_change["price-change"] = (
-    quality_change["price"][2025] -
-    quality_change["price"][2020]
-)
-
-quality_change["sectorDescription"] = (
-    quality_data.drop_duplicates("sector")
-    .set_index("sector")["sectorDescription"]
-)
-
-quality_change = quality_change.reset_index()
-
-plt.figure(figsize = (12, 7))
-
-sns.scatterplot(
-    data = quality_change,
-    x = "ash-change",
-    y = "price-change",
-    hue = "sectorDescription",
-    s = 100
-)
-
-plt.title("Coal Price Change vs. Ash Content Change (2020–2025)")
-plt.xlabel("Change in Ash Content (%)")
-plt.ylabel("Change in Coal Price (Dollars per Short Ton)")
-plt.axhline(0, color = "gray", linestyle = "--")
-plt.axvline(0, color = "gray", linestyle = "--")
-plt.tight_layout()
-plt.show()
-
-plt.figure(figsize = (12, 7))
-
-sns.scatterplot(
-    data = quality_change,
-    x = "sulfur-change",
-    y = "price-change",
-    hue = "sectorDescription",
-    s = 100
-)
-
-plt.title("Coal Price Change vs. Sulfur Content Change (2020–2025)")
-plt.xlabel("Change in Sulfur Content (%)")
-plt.ylabel("Change in Coal Price (Dollars per Short Ton)")
-plt.axhline(0, color = "gray", linestyle = "--")
-plt.axvline(0, color = "gray", linestyle = "--")
-plt.tight_layout()
-plt.show()
-
-# %%
 sector_prices = us[
     us["sector"].isin(valid_sectors)
 ].pivot(
@@ -371,36 +244,6 @@ plt.title("Sector Price Changes vs. Consumption Changes")
 plt.xlabel("Price Change (%)")
 plt.ylabel("Consumption Change (%)")
 
-plt.show()
-
-# %%
-electricity_consumption = (
-    us[us["sector"].isin([1, 2, 3])]
-    .groupby("period")["consumption"]
-    .sum()
-)
-
-other_consumption = (
-    us[us["sector"].isin([8, 9, 10])]
-    .groupby("period")["consumption"]
-    .sum()
-)
-
-electricity_share = (
-    electricity_consumption / national_totals
-) * 100
-
-plt.figure(figsize = (10, 6))
-
-plt.plot(
-    electricity_share.index,
-    electricity_share.values,
-    marker = "o"
-)
-
-plt.title("Electricity Generation's Share of U.S. Coal Consumption")
-plt.xlabel("Year")
-plt.ylabel("Share of Consumption (%)")
 plt.show()
 
 # %%
@@ -517,3 +360,5 @@ plt.xlabel("$ per MMBtu")
 plt.ylabel("State")
 plt.tight_layout()
 plt.show()
+
+
