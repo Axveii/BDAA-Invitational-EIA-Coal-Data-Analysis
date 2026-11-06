@@ -264,7 +264,6 @@ state_prices_2020 = state_prices_2020[
     subset = ["price_per_mmbtu"]
 )
 
-
 # selects sector 98 for 2025
 state_prices_2025 = states[
     (states["period"] == 2025) &
@@ -281,7 +280,6 @@ state_prices_2025 = state_prices_2025[
 ].dropna(
     subset = ["price_per_mmbtu"]
 )
-
 
 # identifies states appearing in both years
 common_states = set(state_prices_2020["stateDescription"]) & \
@@ -360,5 +358,3 @@ plt.xlabel("$ per MMBtu")
 plt.ylabel("State")
 plt.tight_layout()
 plt.show()
-
-
